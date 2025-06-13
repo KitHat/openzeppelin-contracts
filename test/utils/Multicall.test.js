@@ -15,7 +15,7 @@ async function fixture() {
 
 describe('Multicall', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('batches function calls', async function () {

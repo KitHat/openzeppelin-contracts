@@ -38,7 +38,7 @@ async function fixture() {
 
 describe('Account', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   shouldBehaveLikeAccountCore();

@@ -28,7 +28,7 @@ async function fixture() {
 
 describe('SignatureChecker (ERC1271)', function () {
   before('deploying', async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('EOA account', function () {

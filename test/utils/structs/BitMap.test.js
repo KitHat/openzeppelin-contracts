@@ -13,7 +13,7 @@ describe('BitMap', function () {
   const keyC = 9592328n;
 
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('starts empty', async function () {

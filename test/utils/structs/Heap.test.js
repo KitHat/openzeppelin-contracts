@@ -10,7 +10,7 @@ async function fixture() {
 
 describe('Heap', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('Uint256Heap', function () {

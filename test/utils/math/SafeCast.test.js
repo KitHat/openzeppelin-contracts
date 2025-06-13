@@ -11,7 +11,7 @@ async function fixture() {
 
 describe('SafeCast', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   for (const bits of range(8, 256, 8).map(ethers.toBigInt)) {

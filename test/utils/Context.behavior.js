@@ -7,7 +7,7 @@ async function fixture() {
 }
 function shouldBehaveLikeRegularContext() {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('msgSender', function () {

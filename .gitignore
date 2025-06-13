@@ -53,8 +53,8 @@ allFiredEvents
 contracts-exposed
 
 # Hardhat
-/cache
-/artifacts
+/cache*
+/artifacts*
 
 # Foundry
 /out

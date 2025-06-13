@@ -30,7 +30,7 @@ async function fixture() {
 
 describe('UUPSUpgradeable', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('has an interface version', async function () {

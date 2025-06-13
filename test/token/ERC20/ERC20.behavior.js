@@ -1,11 +1,17 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 
+async function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function shouldBehaveLikeERC20(initialSupply, opts = {}) {
   const { forcedApproval } = opts;
 
   beforeEach(async function () {
     [this.holder, this.recipient, this.other] = this.accounts;
+    let b = await ethers.provider.getBalance(this.recipient.address);
+    // console.log(`Receipient balance ${b}`);
   });
 
   it('total supply: returns the total token value', async function () {
@@ -43,6 +49,7 @@ function shouldBehaveLikeERC20(initialSupply, opts = {}) {
 
             beforeEach(async function () {
               this.tx = await this.token.connect(this.recipient).transferFrom(this.holder, this.other, value);
+              await sleep(3000);
             });
 
             it('transfers the requested value', async function () {
@@ -54,6 +61,7 @@ function shouldBehaveLikeERC20(initialSupply, opts = {}) {
             });
 
             it('emits a transfer event', async function () {
+              await sleep(2000);
               await expect(this.tx).to.emit(this.token, 'Transfer').withArgs(this.holder, this.other, value);
             });
 
@@ -69,6 +77,7 @@ function shouldBehaveLikeERC20(initialSupply, opts = {}) {
               });
             } else {
               it('does not emit an approval event', async function () {
+                await sleep(2000);
                 await expect(this.tx).to.not.emit(this.token, 'Approval');
               });
             }
@@ -108,8 +117,13 @@ function shouldBehaveLikeERC20(initialSupply, opts = {}) {
 
         describe('when the spender has unlimited allowance', function () {
           beforeEach(async function () {
+            console.log("before 1");
             await this.token.connect(this.holder).approve(this.recipient, ethers.MaxUint256);
+            await sleep(6000);
+            console.log("before 2");
             this.tx = await this.token.connect(this.recipient).transferFrom(this.holder, this.other, 1n);
+            console.log("before 3");
+            await sleep(1000);
           });
 
           it('does not decrease the spender allowance', async function () {
@@ -117,6 +131,7 @@ function shouldBehaveLikeERC20(initialSupply, opts = {}) {
           });
 
           it('does not emit an approval event', async function () {
+            await sleep(3000);
             await expect(this.tx).to.not.emit(this.token, 'Approval');
           });
         });
@@ -125,6 +140,7 @@ function shouldBehaveLikeERC20(initialSupply, opts = {}) {
       it('reverts when the recipient is the zero address', async function () {
         const value = initialSupply;
         await this.token.connect(this.holder).approve(this.recipient, value);
+        await sleep(1000);
         await expect(this.token.connect(this.recipient).transferFrom(this.holder, ethers.ZeroAddress, value))
           .to.be.revertedWithCustomError(this.token, 'ERC20InvalidReceiver')
           .withArgs(ethers.ZeroAddress);
@@ -171,6 +187,7 @@ function shouldBehaveLikeERC20Transfer(balance) {
 
       beforeEach(async function () {
         this.tx = await this.transfer(this.holder, this.recipient, value);
+        await sleep(3000);
       });
 
       it('transfers the requested value', async function () {
@@ -187,6 +204,7 @@ function shouldBehaveLikeERC20Transfer(balance) {
 
       beforeEach(async function () {
         this.tx = await this.transfer(this.holder, this.recipient, value);
+        await sleep(3000);
       });
 
       it('transfers the requested value', async function () {
@@ -266,4 +284,5 @@ module.exports = {
   shouldBehaveLikeERC20,
   shouldBehaveLikeERC20Transfer,
   shouldBehaveLikeERC20Approve,
+  sleep
 };

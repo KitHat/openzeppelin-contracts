@@ -10,18 +10,35 @@ const data = '0x12345678';
 async function fixture() {
   const [hasNoCode, owner, receiver, spender, other] = await ethers.getSigners();
 
-  const mock = await ethers.deployContract('$SafeERC20');
-  const erc20ReturnFalseMock = await ethers.deployContract('$ERC20ReturnFalseMock', [name, symbol]);
-  const erc20ReturnTrueMock = await ethers.deployContract('$ERC20', [name, symbol]); // default implementation returns true
-  const erc20NoReturnMock = await ethers.deployContract('$ERC20NoReturnMock', [name, symbol]);
-  const erc20ForceApproveMock = await ethers.deployContract('$ERC20ForceApproveMock', [name, symbol]);
-  const erc1363Mock = await ethers.deployContract('$ERC1363', [name, symbol]);
-  const erc1363ReturnFalseOnErc20Mock = await ethers.deployContract('$ERC1363ReturnFalseOnERC20Mock', [name, symbol]);
-  const erc1363ReturnFalseMock = await ethers.deployContract('$ERC1363ReturnFalseMock', [name, symbol]);
-  const erc1363NoReturnMock = await ethers.deployContract('$ERC1363NoReturnMock', [name, symbol]);
-  const erc1363ForceApproveMock = await ethers.deployContract('$ERC1363ForceApproveMock', [name, symbol]);
-  const erc1363Receiver = await ethers.deployContract('$ERC1363ReceiverMock');
-  const erc1363Spender = await ethers.deployContract('$ERC1363SpenderMock');
+  let promises = [
+    await ethers.deployContract('$SafeERC20'),
+    await ethers.deployContract('$ERC20ReturnFalseMock', [name, symbol]),
+    await ethers.deployContract('$ERC20', [name, symbol]),
+    await ethers.deployContract('$ERC20NoReturnMock', [name, symbol]),
+    await ethers.deployContract('$ERC20ForceApproveMock', [name, symbol]),
+    await ethers.deployContract('$ERC1363', [name, symbol]),
+    await ethers.deployContract('$ERC1363ReturnFalseOnERC20Mock', [name, symbol]),
+    await ethers.deployContract('$ERC1363ReturnFalseMock', [name, symbol]),
+    await ethers.deployContract('$ERC1363NoReturnMock', [name, symbol]),
+    await ethers.deployContract('$ERC1363ForceApproveMock', [name, symbol]),
+    await ethers.deployContract('$ERC1363ReceiverMock'),
+    await ethers.deployContract('$ERC1363SpenderMock')
+  ];
+
+  const [
+    mock,
+    erc20ReturnFalseMock,
+    erc20ReturnTrueMock,
+    erc20NoReturnMock,
+    erc20ForceApproveMock,
+    erc1363Mock,
+    erc1363ReturnFalseOnErc20Mock,
+    erc1363ReturnFalseMock,
+    erc1363NoReturnMock,
+    erc1363ForceApproveMock,
+    erc1363Receiver,
+    erc1363Spender
+  ] = await Promise.all(promises)
 
   return {
     hasNoCode,
@@ -46,7 +63,7 @@ async function fixture() {
 
 describe('SafeERC20', function () {
   before(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('with address that has no contract code', function () {

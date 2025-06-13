@@ -28,7 +28,7 @@ describe('Arrays', function () {
   };
 
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('search', function () {
@@ -90,7 +90,7 @@ describe('Arrays', function () {
         };
 
         beforeEach(async function () {
-          Object.assign(this, await loadFixture(fixture));
+          Object.assign(this, await fixture());
         });
 
         for (const [name, input] of Object.entries(tests)) {
@@ -128,7 +128,7 @@ describe('Arrays', function () {
       };
 
       beforeEach(async function () {
-        Object.assign(this, await loadFixture(fixture));
+        Object.assign(this, await fixture());
       });
 
       if (isValueType) {

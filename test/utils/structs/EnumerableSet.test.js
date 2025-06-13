@@ -50,7 +50,7 @@ async function fixture() {
 
 describe('EnumerableSet', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   for (const { name, value } of SET_TYPES) {

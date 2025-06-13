@@ -21,7 +21,7 @@ describe('DoubleEndedQueue', function () {
   const bytesD = coder.encode(['uint256'], [0x171717]);
 
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('when empty', function () {

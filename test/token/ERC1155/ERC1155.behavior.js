@@ -4,6 +4,7 @@ const { anyValue } = require('@nomicfoundation/hardhat-chai-matchers/withArgs');
 
 const { RevertType } = require('../../helpers/enums');
 const { shouldSupportInterfaces } = require('../../utils/introspection/SupportsInterface.behavior');
+const { sleep } = require('../ERC20/ERC20.behavior');
 
 function shouldBehaveLikeERC1155() {
   const firstTokenId = 1n;
@@ -109,6 +110,7 @@ function shouldBehaveLikeERC1155() {
     describe('setApprovalForAll', function () {
       beforeEach(async function () {
         this.tx = await this.token.connect(this.holder).setApprovalForAll(this.proxy, true);
+        await sleep(3000);
       });
 
       it('sets approval status which can be queried via isApprovedForAll', async function () {
@@ -121,6 +123,7 @@ function shouldBehaveLikeERC1155() {
 
       it('can unset approval for an operator', async function () {
         await this.token.connect(this.holder).setApprovalForAll(this.proxy, false);
+        await sleep(3000);
         expect(await this.token.isApprovedForAll(this.holder, this.proxy)).to.be.false;
       });
 
@@ -158,6 +161,9 @@ function shouldBehaveLikeERC1155() {
       });
 
       function transferWasSuccessful() {
+        beforeEach(async function () {
+          await sleep(3000);
+        });
         it('debits transferred balance from sender', async function () {
           expect(await this.token.balanceOf(this.args.from, this.args.id)).to.equal(0n);
         });
@@ -200,6 +206,7 @@ function shouldBehaveLikeERC1155() {
         describe('when operator is not approved by holder', function () {
           beforeEach(async function () {
             await this.token.connect(this.holder).setApprovalForAll(this.proxy, false);
+            await sleep(3000);
           });
 
           it('reverts', async function () {
@@ -261,6 +268,7 @@ function shouldBehaveLikeERC1155() {
             this.tx = await this.token
               .connect(this.args.operator)
               .safeTransferFrom(this.args.from, this.args.to, this.args.id, this.args.value, this.args.data);
+            await sleep(3000);
           });
 
           transferWasSuccessful();
@@ -468,6 +476,7 @@ function shouldBehaveLikeERC1155() {
 
       function batchTransferWasSuccessful() {
         it('debits transferred balances from sender', async function () {
+          await sleep(3000);
           const newBalances = await this.token.balanceOfBatch(
             this.args.ids.map(() => this.args.from),
             this.args.ids,
@@ -476,6 +485,7 @@ function shouldBehaveLikeERC1155() {
         });
 
         it('credits transferred balances to receiver', async function () {
+          await sleep(3000);
           const newBalances = await this.token.balanceOfBatch(
             this.args.ids.map(() => this.args.to),
             this.args.ids,
@@ -484,6 +494,7 @@ function shouldBehaveLikeERC1155() {
         });
 
         it('emits a TransferBatch log', async function () {
+          await sleep(3000);
           await expect(this.tx)
             .to.emit(this.token, 'TransferBatch')
             .withArgs(this.args.operator, this.args.from, this.args.to, this.args.ids, this.args.values);
@@ -512,6 +523,7 @@ function shouldBehaveLikeERC1155() {
         describe('when operator is not approved by holder', function () {
           beforeEach(async function () {
             await this.token.connect(this.holder).setApprovalForAll(this.proxy, false);
+            await sleep(3000);
           });
 
           it('reverts', async function () {
@@ -579,6 +591,7 @@ function shouldBehaveLikeERC1155() {
             this.tx = await this.token
               .connect(this.args.operator)
               .safeBatchTransferFrom(this.args.from, this.args.to, this.args.ids, this.args.values, this.args.data);
+            await sleep(3000);
           });
 
           batchTransferWasSuccessful();

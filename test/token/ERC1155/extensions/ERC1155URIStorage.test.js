@@ -20,7 +20,7 @@ describe('ERC1155URIStorage', function () {
     }
 
     beforeEach(async function () {
-      Object.assign(this, await loadFixture(fixture));
+      Object.assign(this, await fixture());
     });
 
     it('can request the token uri, returning the erc1155 uri if no token uri was set', async function () {
@@ -50,7 +50,7 @@ describe('ERC1155URIStorage', function () {
     }
 
     beforeEach(async function () {
-      Object.assign(this, await loadFixture(fixture));
+      Object.assign(this, await fixture());
     });
 
     it('can request the token uri, returning an empty string if no token uri was set', async function () {

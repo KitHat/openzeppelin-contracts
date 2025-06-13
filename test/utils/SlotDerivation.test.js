@@ -12,7 +12,7 @@ async function fixture() {
 
 describe('SlotDerivation', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('namespaces', function () {

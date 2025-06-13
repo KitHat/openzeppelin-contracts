@@ -21,7 +21,7 @@ async function fixture() {
 
 describe('ERC1155Holder', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   shouldSupportInterfaces(['ERC1155Receiver']);

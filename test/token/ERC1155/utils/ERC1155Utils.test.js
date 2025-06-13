@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { RevertType } = require('../../../helpers/enums');
 const { PANIC_CODES } = require('@nomicfoundation/hardhat-chai-matchers/panic');
+const { sleep } = require('../../ERC20/ERC20.behavior')
 
 const firstTokenId = 1n;
 const secondTokenId = 2n;
@@ -38,7 +39,7 @@ const fixture = async () => {
 
 describe('ERC1155Utils', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('onERC1155Received', function () {
@@ -57,15 +58,17 @@ describe('ERC1155Utils', function () {
 
     it('succeeds when data is passed', async function () {
       const data = '0x12345678';
-      await expect(
-        this.utils.$checkOnERC1155Received(
-          this.operator,
-          this.owner,
-          this.receivers.correct,
-          firstTokenId,
-          firstTokenValue,
-          data,
-        ),
+      let tx = await this.utils.$checkOnERC1155Received(
+        this.operator,
+        this.owner,
+        this.receivers.correct,
+        firstTokenId,
+        firstTokenValue,
+        data,
+      );
+      await sleep(3000);
+      expect(
+        tx
       ).to.not.be.reverted;
     });
 

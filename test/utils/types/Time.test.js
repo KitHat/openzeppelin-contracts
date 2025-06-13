@@ -43,7 +43,7 @@ async function fixture() {
 
 describe('Time', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('clocks', function () {

@@ -11,7 +11,7 @@ for (const variant of ['', 'Transient']) {
     }
 
     beforeEach(async function () {
-      Object.assign(this, await loadFixture(fixture));
+      Object.assign(this, await fixture());
     });
 
     it('nonReentrant function can be called', async function () {

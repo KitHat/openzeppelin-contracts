@@ -39,7 +39,7 @@ async function fixture() {
 
 describe('Math', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('add512', function () {

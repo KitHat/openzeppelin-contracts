@@ -82,7 +82,7 @@ describe('Governor', function () {
 
     describe(`using ${Token}`, function () {
       beforeEach(async function () {
-        Object.assign(this, await loadFixture(fixture));
+        Object.assign(this, await fixture());
         // initiate fresh proposal
         this.proposal = this.helper.setProposal(
           [

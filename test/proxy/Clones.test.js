@@ -81,7 +81,7 @@ async function fixture() {
 
 describe('Clones', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   for (const args of [undefined, '0x', '0x11223344']) {

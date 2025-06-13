@@ -1,9 +1,17 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
+const { sleep } = require('../token/ERC20/ERC20.behavior');
 
 async function fixture() {
-  const [owner, accountA, accountB] = await ethers.getSigners();
+  const [owner] = await ethers.getSigners(); let walletPrivates = [
+    "0x39539ab1876910bbf3a223d84a29e28f1cb4e2e456503e7e91ed39b2e7223d68",
+    "0x0b6e18cafb6ed99687ec547bd28139cafdd2bffe70e6b688025de6b445aa5c5b",
+    "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b"
+  ];
+  let wallets = walletPrivates.map((private) => { return new ethers.Wallet(private, ethers.provider); });
+  accountA = wallets[0];
+  accountB = wallets[1];
   const ownable2Step = await ethers.deployContract('$Ownable2Step', [owner]);
   return {
     ownable2Step,
@@ -15,7 +23,7 @@ async function fixture() {
 
 describe('Ownable2Step', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('transfer ownership', function () {
@@ -30,8 +38,11 @@ describe('Ownable2Step', function () {
 
     it('changes owner after transfer', async function () {
       await this.ownable2Step.connect(this.owner).transferOwnership(this.accountA);
+      await sleep(3000);
+      let tx = await this.ownable2Step.connect(this.accountA).acceptOwnership();
+      await sleep(3000);
 
-      await expect(this.ownable2Step.connect(this.accountA).acceptOwnership())
+      expect(tx)
         .to.emit(this.ownable2Step, 'OwnershipTransferred')
         .withArgs(this.owner, this.accountA);
 

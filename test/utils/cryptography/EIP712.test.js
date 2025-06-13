@@ -32,7 +32,7 @@ describe('EIP712', function () {
   for (const [shortOrLong, [name, version]] of Object.entries(LENGTHS)) {
     describe(`with ${shortOrLong} name and version`, function () {
       beforeEach('deploying', async function () {
-        Object.assign(this, await loadFixture(fixture));
+        Object.assign(this, await fixture());
         Object.assign(this, this.lengths[shortOrLong]);
       });
 

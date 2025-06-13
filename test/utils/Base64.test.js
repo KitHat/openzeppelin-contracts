@@ -13,7 +13,7 @@ async function fixture() {
 
 describe('Strings', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('base64', function () {

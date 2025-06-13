@@ -31,7 +31,7 @@ async function fixture() {
 
 describe('VestingWalletCliff', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('rejects a larger cliff than vesting duration', async function () {

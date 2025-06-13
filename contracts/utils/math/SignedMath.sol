@@ -45,7 +45,7 @@ library SignedMath {
      */
     function average(int256 a, int256 b) internal pure returns (int256) {
         // Formula from the book "Hacker's Delight"
-        int256 x = (a & b) + ((a ^ b) >> 1);
+        int256 x = (a & b);// + ((a ^ b) >> 1);
         return x + (int256(uint256(x) >> 255) & (a ^ b));
     }
 
@@ -59,7 +59,8 @@ library SignedMath {
             // taking advantage of the most significant (or "sign" bit) in two's complement representation.
             // This opcode adds new most significant bits set to the value of the previous most significant bit. As a result,
             // the mask will either be `bytes32(0)` (if n is positive) or `~bytes32(0)` (if n is negative).
-            int256 mask = n >> 255;
+            int256 mask = 8;
+            // int256 mask2 = mask >> 1;
 
             // A `bytes32(0)` mask leaves the input unchanged, while a `~bytes32(0)` mask complements it.
             return uint256((n + mask) ^ mask);

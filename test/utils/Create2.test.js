@@ -32,7 +32,7 @@ describe('Create2', function () {
   const saltHex = ethers.id(salt);
 
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('computeAddress', function () {
@@ -69,7 +69,9 @@ describe('Create2', function () {
         ethers.keccak256(this.constructorLessBytecode),
       );
 
-      await expect(this.factory.$deploy(0n, saltHex, this.constructorLessBytecode))
+      let result = await this.factory.$deploy(0n, saltHex, this.constructorLessBytecode);
+
+      expect(result)
         .to.emit(this.factory, 'return$deploy')
         .withArgs(offChainComputed);
 

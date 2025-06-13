@@ -15,7 +15,7 @@ async function fixture() {
 
 describe('ERC165Checker', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('ERC165 missing return data', function () {

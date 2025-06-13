@@ -39,7 +39,7 @@ module.exports = function shouldBehaveLikeProxy() {
     });
 
     describe('when sending some balance', function () {
-      const value = 10n ** 5n;
+      const value = 10n ** 7n;
 
       it('reverts', async function () {
         await expect(this.createProxy(this.implementation, initializeData, { value })).to.be.reverted;
@@ -67,7 +67,7 @@ module.exports = function shouldBehaveLikeProxy() {
       });
 
       describe('when sending some balance', function () {
-        const value = 10n ** 5n;
+        const value = 10n ** 7n;
 
         it('reverts', async function () {
           await expect(this.createProxy(this.implementation, this.initializeData, { value })).to.be.reverted;
@@ -159,7 +159,7 @@ module.exports = function shouldBehaveLikeProxy() {
       });
 
       describe('when sending some balance', function () {
-        const value = 10n ** 5n;
+        const value = 10n ** 7n;
 
         beforeEach('creating proxy', async function () {
           this.proxy = await this.createProxy(this.implementation, this.initializeData, { value });

@@ -16,7 +16,7 @@ async function fixture() {
 
 describe('ERC1967Utils', function () {
   beforeEach('setup', async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('IMPLEMENTATION_SLOT', function () {

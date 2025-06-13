@@ -14,7 +14,7 @@ module.exports = function shouldBehaveLikeClone() {
   };
 
   describe('construct with value', function () {
-    const value = 10n;
+    const value = 1000000n;
 
     it('factory has enough balance', async function () {
       await this.deployer.sendTransaction({ to: this.factory, value });

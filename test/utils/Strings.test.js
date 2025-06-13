@@ -10,7 +10,7 @@ async function fixture() {
 
 describe('Strings', function () {
   before(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('toString', function () {

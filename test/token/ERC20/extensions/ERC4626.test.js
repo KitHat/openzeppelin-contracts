@@ -4,19 +4,28 @@ const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { PANIC_CODES } = require('@nomicfoundation/hardhat-chai-matchers/panic');
 
 const { Enum } = require('../../../helpers/enums');
+const { sleep } = require('../ERC20.behavior');
 
 const name = 'My Token';
 const symbol = 'MTKN';
 const decimals = 18n;
 
-async function fixture() {
-  const [holder, recipient, spender, other, ...accounts] = await ethers.getSigners();
+async function fixture() {  
+  let walletPrivates = [
+    "0x39539ab1876910bbf3a223d84a29e28f1cb4e2e456503e7e91ed39b2e7223d68",
+    "0x0b6e18cafb6ed99687ec547bd28139cafdd2bffe70e6b688025de6b445aa5c5b",
+    "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b"
+  ];
+  let wallets = walletPrivates.map((private) => { return new ethers.Wallet(private, ethers.provider); });
+  const [holder] = await ethers.getSigners();
+  const [recipient, spender, other] = wallets;
+  const accounts = wallets;
   return { holder, recipient, spender, other, accounts };
 }
 
 describe('ERC4626', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('inherit decimals if from asset', async function () {
@@ -457,6 +466,7 @@ describe('ERC4626', function () {
           // Add 1 token of underlying asset and 100 shares to the vault
           await this.token.$_mint(this.vault, parseToken(1n));
           await this.vault.$_mint(this.holder, parseShare(100n));
+          await sleep(3000);
         });
 
         it('status', async function () {
@@ -569,8 +579,11 @@ describe('ERC4626', function () {
           await expect(this.vault.connect(this.other).withdraw(parseToken(1n), this.recipient, this.holder))
             .to.be.revertedWithCustomError(this.vault, 'ERC20InsufficientAllowance')
             .withArgs(this.other, 0n, assets);
+          await sleep(3000);
+          let tx = this.vault.connect(this.spender).withdraw(parseToken(1n), this.recipient, this.holder);
+          await sleep(3000);
 
-          await expect(this.vault.connect(this.spender).withdraw(parseToken(1n), this.recipient, this.holder)).to.not.be
+          expect(tx).to.not.be
             .reverted;
         });
 
@@ -602,11 +615,16 @@ describe('ERC4626', function () {
         });
 
         it('redeem with approval', async function () {
-          await expect(this.vault.connect(this.other).redeem(parseShare(100n), this.recipient, this.holder))
+          let tx = await this.vault.connect(this.other).redeem(parseShare(100n), this.recipient, this.holder);
+          await sleep(3000);
+          await expect(tx)
             .to.be.revertedWithCustomError(this.vault, 'ERC20InsufficientAllowance')
             .withArgs(this.other, 0n, parseShare(100n));
+          await sleep(3000);
 
-          await expect(this.vault.connect(this.spender).redeem(parseShare(100n), this.recipient, this.holder)).to.not.be
+          tx = await this.vault.connect(this.spender).redeem(parseShare(100n), this.recipient, this.holder);
+          await sleep(3000);
+          expect(tx).to.not.be
             .reverted;
         });
       });
@@ -737,8 +755,12 @@ describe('ERC4626', function () {
     await token.connect(alice).approve(vault, 4000n);
     await token.connect(bruce).approve(vault, 7001n);
 
+    await sleep(3000);
+    let tx = vault.connect(alice).mint(2000n, alice);
+    await sleep(3000);
+
     // 1. Alice mints 2000 shares (costs 2000 tokens)
-    await expect(vault.connect(alice).mint(2000n, alice))
+    await expect(tx)
       .to.emit(token, 'Transfer')
       .withArgs(alice, vault, 2000n)
       .to.emit(vault, 'Transfer')

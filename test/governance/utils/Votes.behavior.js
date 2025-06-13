@@ -6,6 +6,7 @@ const { getDomain, Delegation } = require('../../helpers/eip712');
 const time = require('../../helpers/time');
 
 const { shouldBehaveLikeERC6372 } = require('./ERC6372.behavior');
+const { sleep } = require('../../token/ERC20/ERC20.behavior');
 
 function shouldBehaveLikeVotes(tokens, { mode = 'blocknumber', fungible = true }) {
   beforeEach(async function () {
@@ -27,8 +28,10 @@ function shouldBehaveLikeVotes(tokens, { mode = 'blocknumber', fungible = true }
 
       it('delegation without tokens', async function () {
         expect(await this.votes.delegates(this.alice)).to.equal(ethers.ZeroAddress);
+        let tx = await this.votes.connect(this.alice).delegate(this.alice);
+        await sleep(3000);
 
-        await expect(this.votes.connect(this.alice).delegate(this.alice))
+        expect(tx)
           .to.emit(this.votes, 'DelegateChanged')
           .withArgs(this.alice, ethers.ZeroAddress, this.alice)
           .to.not.emit(this.votes, 'DelegateVotesChanged');

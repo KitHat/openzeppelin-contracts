@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 const { sum } = require('../../../helpers/math');
+const { sleep } = require('../../ERC20/ERC20.behavior');
 
 const name = 'Non Fungible Token';
 const symbol = 'NFT';
@@ -12,6 +13,15 @@ describe('ERC721Consecutive', function () {
     describe(`with offset ${offset}`, function () {
       async function fixture() {
         const accounts = await ethers.getSigners();
+        let walletPrivates = [
+          "0x39539ab1876910bbf3a223d84a29e28f1cb4e2e456503e7e91ed39b2e7223d68",
+          "0x0b6e18cafb6ed99687ec547bd28139cafdd2bffe70e6b688025de6b445aa5c5b",
+          "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b"
+        ];
+        let wallets = walletPrivates.map((private) => { return new ethers.Wallet(private, ethers.provider); });
+        accounts[1] = wallets[0];
+        accounts[2] = wallets[1];
+        accounts[3] = wallets[2];
         const [alice, bruce, chris, receiver] = accounts;
 
         const batches = [
@@ -23,7 +33,7 @@ describe('ERC721Consecutive', function () {
           { receiver: alice, amount: 7n },
         ];
         const delegates = [alice, chris];
-
+        await sleep(3000);
         const token = await ethers.deployContract('$ERC721ConsecutiveMock', [
           name,
           symbol,
@@ -37,7 +47,7 @@ describe('ERC721Consecutive', function () {
       }
 
       beforeEach(async function () {
-        Object.assign(this, await loadFixture(fixture));
+        Object.assign(this, await fixture());
       });
 
       describe('minting during construction', function () {
@@ -87,6 +97,8 @@ describe('ERC721Consecutive', function () {
               await this.token.connect(account).delegate(account);
             }
 
+            await sleep(3000);
+
             // At this point all accounts should have delegated
             expect(await this.token.getVotes(account)).to.equal(balance);
           }
@@ -122,8 +134,8 @@ describe('ERC721Consecutive', function () {
           await expect(this.token.ownerOf(tokenId))
             .to.be.revertedWithCustomError(this.token, 'ERC721NonexistentToken')
             .withArgs(tokenId);
-
-          await expect(this.token.$_mint(this.alice, tokenId))
+          let tx = await this.token.$_mint(this.alice, tokenId);
+          expect(tx)
             .to.emit(this.token, 'Transfer')
             .withArgs(ethers.ZeroAddress, this.alice, tokenId);
         });
@@ -149,15 +161,18 @@ describe('ERC721Consecutive', function () {
         });
 
         it('tokens can be burned and re-minted #1', async function () {
-          await expect(this.token.connect(this.alice).$_burn(tokenId))
+          let tx = await this.token.connect(this.alice).$_burn(tokenId);
+          await sleep(6000);
+          await expect(tx)
             .to.emit(this.token, 'Transfer')
             .withArgs(this.alice, ethers.ZeroAddress, tokenId);
 
           await expect(this.token.ownerOf(tokenId))
             .to.be.revertedWithCustomError(this.token, 'ERC721NonexistentToken')
             .withArgs(tokenId);
-
-          await expect(this.token.$_mint(this.bruce, tokenId))
+          tx = await this.token.$_mint(this.bruce, tokenId);
+          await sleep(3000);
+          await expect(tx)
             .to.emit(this.token, 'Transfer')
             .withArgs(ethers.ZeroAddress, this.bruce, tokenId);
 

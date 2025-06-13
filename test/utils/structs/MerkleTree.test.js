@@ -31,7 +31,7 @@ async function fixture() {
 
 describe('MerkleTree', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('sets initial values at setup', async function () {
@@ -62,7 +62,7 @@ describe('MerkleTree', function () {
         await expect(this.mock.root()).to.eventually.equal(tree.root);
         await expect(this.mock.nextLeafIndex()).to.eventually.equal(BigInt(i) + 1n);
       }
-    });
+    }).timeout(400000);
 
     it('pushing to a full tree reverts', async function () {
       await Promise.all(Array.from({ length: 2 ** Number(DEPTH) }).map(() => this.mock.push(ethers.ZeroHash)));

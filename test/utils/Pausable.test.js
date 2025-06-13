@@ -12,7 +12,7 @@ async function fixture() {
 
 describe('Pausable', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('when unpaused', function () {

@@ -35,7 +35,7 @@ describe('P256', function () {
   }
 
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('with signature', function () {

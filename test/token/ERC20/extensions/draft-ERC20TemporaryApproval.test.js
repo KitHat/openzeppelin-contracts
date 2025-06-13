@@ -12,6 +12,9 @@ const initialSupply = 100n;
 async function fixture() {
   // this.accounts is used by shouldBehaveLikeERC20
   const accounts = await ethers.getSigners();
+  let fundedPrivate = "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b";
+  let fundedWallet = new ethers.Wallet(fundedPrivate, ethers.provider);
+  accounts[1] = fundedWallet;
   const [holder, recipient, other] = accounts;
 
   const token = await ethers.deployContract('$ERC20TemporaryApproval', [name, symbol]);
@@ -26,7 +29,7 @@ async function fixture() {
 
 describe('ERC20TemporaryApproval', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   shouldBehaveLikeERC20(initialSupply);

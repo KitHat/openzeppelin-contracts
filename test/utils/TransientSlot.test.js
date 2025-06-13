@@ -21,7 +21,7 @@ async function fixture() {
 
 describe('TransientSlot', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   for (const { name, type, value, zero } of TYPES) {

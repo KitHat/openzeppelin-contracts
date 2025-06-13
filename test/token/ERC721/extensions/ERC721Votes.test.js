@@ -30,7 +30,7 @@ describe('ERC721Votes', function () {
 
     describe(`vote with ${mode}`, function () {
       beforeEach(async function () {
-        Object.assign(this, await loadFixture(fixture));
+        Object.assign(this, await fixture());
         this.votes = this.token;
       });
 

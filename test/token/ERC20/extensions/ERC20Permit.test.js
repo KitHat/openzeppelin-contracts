@@ -4,6 +4,7 @@ const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 const { getDomain, domainSeparator, Permit } = require('../../../helpers/eip712');
 const time = require('../../../helpers/time');
+const { sleep } = require('../ERC20.behavior');
 
 const name = 'My Token';
 const symbol = 'MTKN';
@@ -26,7 +27,7 @@ async function fixture() {
 
 describe('ERC20Permit', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('initial nonce is 0', async function () {
@@ -95,7 +96,7 @@ describe('ERC20Permit', function () {
     });
 
     it('rejects expired permit', async function () {
-      const deadline = (await time.clock.timestamp()) - time.duration.weeks(1);
+      const deadline = Math.ceil((Date.now() / 1000 - 7 * 24 * 60 * 60));
 
       const { v, r, s } = await this.buildData(this.token, deadline)
         .then(({ domain, types, message }) => this.owner.signTypedData(domain, types, message))

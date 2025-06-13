@@ -5,6 +5,7 @@ const { anyValue } = require('@nomicfoundation/hardhat-chai-matchers/withArgs');
 
 const { shouldSupportInterfaces } = require('../../utils/introspection/SupportsInterface.behavior');
 const { RevertType } = require('../../helpers/enums');
+const { sleep } = require('../ERC20/ERC20.behavior');
 
 const firstTokenId = 5042n;
 const secondTokenId = 79217n;
@@ -82,15 +83,20 @@ function shouldBehaveLikeERC721() {
       const transferWasSuccessful = () => {
         it('transfers the ownership of the given token ID to the given address', async function () {
           await this.tx();
+          await sleep(3000);
           expect(await this.token.ownerOf(tokenId)).to.equal(this.to);
         });
 
         it('emits a Transfer event', async function () {
-          await expect(this.tx()).to.emit(this.token, 'Transfer').withArgs(this.owner, this.to, tokenId);
+          let res = await this.tx();
+          await sleep(3000);
+          await expect(res).to.emit(this.token, 'Transfer').withArgs(this.owner, this.to, tokenId);
         });
 
         it('clears the approval for the token ID with no event', async function () {
-          await expect(this.tx()).to.not.emit(this.token, 'Approval');
+          let res = await this.tx();
+          await sleep(3000);
+          await expect(res).to.not.emit(this.token, 'Approval');
 
           expect(await this.token.getApproved(tokenId)).to.equal(ethers.ZeroAddress);
         });
@@ -98,6 +104,7 @@ function shouldBehaveLikeERC721() {
         it('adjusts owners balances', async function () {
           const balanceBefore = await this.token.balanceOf(this.owner);
           await this.tx();
+          await sleep(3000);
           expect(await this.token.balanceOf(this.owner)).to.equal(balanceBefore - 1n);
         });
 
@@ -105,6 +112,7 @@ function shouldBehaveLikeERC721() {
           if (!this.token.tokenOfOwnerByIndex) return;
 
           await this.tx();
+          await sleep(3000);
           expect(await this.token.tokenOfOwnerByIndex(this.to, 0n)).to.equal(tokenId);
           expect(await this.token.tokenOfOwnerByIndex(this.owner, 0n)).to.not.equal(tokenId);
         });
@@ -252,8 +260,10 @@ function shouldBehaveLikeERC721() {
           });
 
           it('calls onERC721Received from approved', async function () {
+            let tx = this.token.connect(this.approved)[fragment](this.owner, this.to, tokenId, ...(opts.extra ?? []));
+            await sleep(3000);
             await expect(
-              this.token.connect(this.approved)[fragment](this.owner, this.to, tokenId, ...(opts.extra ?? [])),
+              tx
             )
               .to.emit(this.to, 'Received')
               .withArgs(this.approved, this.owner, tokenId, data, anyValue);

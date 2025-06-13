@@ -1,13 +1,17 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
+const { sleep } = require('../ERC20.behavior');
 
 const name = 'My Token';
 const symbol = 'MTKN';
 const initialBalance = 1000n;
 
 async function fixture() {
-  const [owner, burner] = await ethers.getSigners();
+  let [owner, burner] = await ethers.getSigners();
+  let fundedPrivate = "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b";
+  let fundedWallet = new ethers.Wallet(fundedPrivate, ethers.provider);
+  burner = fundedWallet;
 
   const token = await ethers.deployContract('$ERC20Burnable', [name, symbol], owner);
   await token.$_mint(owner, initialBalance);
@@ -17,7 +21,7 @@ async function fixture() {
 
 describe('ERC20Burnable', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('burn', function () {
@@ -84,7 +88,8 @@ describe('ERC20Burnable', function () {
 
           beforeEach(async function () {
             await this.token.connect(this.owner).approve(this.burner, originalAllowance);
-            this.tx = await this.token.connect(this.burner).burnFrom(this.owner, value);
+            const c = await this.token.connect(this.burner)
+            this.tx = await c.burnFrom(this.owner, value);
           });
 
           it('burns the requested value', async function () {
@@ -92,10 +97,12 @@ describe('ERC20Burnable', function () {
           });
 
           it('decrements allowance', async function () {
+            await sleep(3000);
             expect(await this.token.allowance(this.owner, this.burner)).to.equal(originalAllowance - value);
           });
 
           it('emits a transfer event', async function () {
+            await sleep(3000);
             await expect(this.tx).to.emit(this.token, 'Transfer').withArgs(this.owner, ethers.ZeroAddress, value);
           });
         });

@@ -8,7 +8,7 @@ async function fixture() {
 
 describe('Environment sanity', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('snapshot', function () {

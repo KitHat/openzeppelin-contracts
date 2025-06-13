@@ -20,7 +20,7 @@ async function fixture() {
 
 describe('ERC721URIStorage', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   shouldSupportInterfaces(['0x49064906']);

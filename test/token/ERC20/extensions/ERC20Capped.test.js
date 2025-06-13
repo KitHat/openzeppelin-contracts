@@ -16,7 +16,7 @@ async function fixture() {
 
 describe('ERC20Capped', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('requires a non-zero cap', async function () {

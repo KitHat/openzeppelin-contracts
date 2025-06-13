@@ -14,7 +14,7 @@ async function fixture() {
 
 describe('ECDSA', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('recover with invalid signature', function () {

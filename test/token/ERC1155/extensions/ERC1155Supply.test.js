@@ -15,7 +15,7 @@ describe('ERC1155Supply', function () {
   const secondTokenValue = 23n;
 
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('before mint', function () {

@@ -54,7 +54,7 @@ async function fixture() {
 
 describe('ERC2771Forwarder', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('verify', function () {

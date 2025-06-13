@@ -11,7 +11,7 @@ async function fixture() {
 
 describe('RSA', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   // Load test cases from file SigVer15_186-3.rsp from:

@@ -57,7 +57,7 @@ describe('GovernorTimelockCompound', function () {
 
     describe(`using ${Token}`, function () {
       beforeEach(async function () {
-        Object.assign(this, await loadFixture(fixture));
+        Object.assign(this, await fixture());
 
         // default proposal
         this.proposal = this.helper.setProposal(

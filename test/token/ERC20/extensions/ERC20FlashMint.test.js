@@ -18,7 +18,7 @@ async function fixture() {
 
 describe('ERC20FlashMint', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('maxFlashLoan', function () {

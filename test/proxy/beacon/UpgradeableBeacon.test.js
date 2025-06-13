@@ -14,7 +14,7 @@ async function fixture() {
 
 describe('UpgradeableBeacon', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('cannot be created with non-contract implementation', async function () {

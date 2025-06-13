@@ -19,7 +19,7 @@ async function fixture() {
 
 describe('BeaconProxy', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('bad beacon is not accepted', function () {
@@ -75,14 +75,14 @@ describe('BeaconProxy', function () {
     it('payable initialization', async function () {
       const value = 55n;
       const data = this.v1.interface.encodeFunctionData('initializePayableWithValue', [value]);
-      const balance = 100n;
+      const balance = 10000000n;
 
       this.proxy = await this.newBeaconProxy(this.beacon, data, { value: balance });
       await assertInitialized.bind(this)({ value, balance });
     });
 
     it('reverting initialization due to value', async function () {
-      await expect(this.newBeaconProxy(this.beacon, '0x', { value: 1n })).to.be.revertedWithCustomError(
+      await expect(this.newBeaconProxy(this.beacon, '0x', { value: 1000000n })).to.be.revertedWithCustomError(
         this.factory,
         'ERC1967NonPayable',
       );

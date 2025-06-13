@@ -15,7 +15,7 @@ async function fixture() {
 
 describe('CircularBuffer', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('reverts on invalid setup', async function () {

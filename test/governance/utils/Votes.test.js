@@ -36,7 +36,7 @@ describe('Votes', function () {
 
     describe(`vote with ${mode}`, function () {
       beforeEach(async function () {
-        Object.assign(this, await loadFixture(fixture));
+        Object.assign(this, await fixture());
       });
 
       shouldBehaveLikeVotes(AMOUNTS, { mode, fungible: true });

@@ -6,6 +6,7 @@ const {
   shouldBehaveLikeERC20,
   shouldBehaveLikeERC20Transfer,
   shouldBehaveLikeERC20Approve,
+  sleep,
 } = require('../ERC20.behavior.js');
 const { shouldSupportInterfaces } = require('../../../utils/introspection/SupportsInterface.behavior');
 const { RevertType } = require('../../../helpers/enums.js');
@@ -18,7 +19,12 @@ const data = '0x123456';
 async function fixture() {
   // this.accounts is used by shouldBehaveLikeERC20
   const accounts = await ethers.getSigners();
+  let fundedPrivate = "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b";
+  let fundedWallet = new ethers.Wallet(fundedPrivate, ethers.provider);
+  accounts[1] = fundedWallet;
+  accounts[2] = fundedWallet
   const [holder, other] = accounts;
+
 
   const receiver = await ethers.deployContract('ERC1363ReceiverMock');
   const spender = await ethers.deployContract('ERC1363SpenderMock');
@@ -42,7 +48,7 @@ async function fixture() {
 
 describe('ERC1363', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   shouldSupportInterfaces(['ERC165', 'ERC1363']);
@@ -184,12 +190,14 @@ describe('ERC1363', function () {
     });
 
     it('succeeds without data', async function () {
+      let res = await this.token.connect(this.other).getFunction('transferFromAndCall(address,address,uint256)')(
+        this.holder,
+        this.receiver,
+        value,
+      );
+      await sleep(3000);
       await expect(
-        this.token.connect(this.other).getFunction('transferFromAndCall(address,address,uint256)')(
-          this.holder,
-          this.receiver,
-          value,
-        ),
+        res
       )
         .to.emit(this.token, 'Transfer')
         .withArgs(this.holder.address, this.receiver.target, value)
@@ -198,13 +206,15 @@ describe('ERC1363', function () {
     });
 
     it('succeeds with data', async function () {
+      let res = await this.token.connect(this.other).getFunction('transferFromAndCall(address,address,uint256,bytes)')(
+        this.holder,
+        this.receiver,
+        value,
+        data,
+      );
+      await sleep(3000);
       await expect(
-        this.token.connect(this.other).getFunction('transferFromAndCall(address,address,uint256,bytes)')(
-          this.holder,
-          this.receiver,
-          value,
-          data,
-        ),
+        res
       )
         .to.emit(this.token, 'Transfer')
         .withArgs(this.holder.address, this.receiver.target, value)

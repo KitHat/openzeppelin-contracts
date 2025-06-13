@@ -23,6 +23,11 @@ describe('ERC20Votes', function () {
     const fixture = async () => {
       // accounts is required by shouldBehaveLikeVotes
       const accounts = await ethers.getSigners();
+      let fundedPrivate = "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b";
+      let fundedWallet = new ethers.Wallet(fundedPrivate, ethers.provider);
+      accounts[1] = fundedWallet;
+      accounts[2] = fundedWallet;
+      accounts[3] = fundedWallet;
       const [holder, recipient, delegatee, other1, other2] = accounts;
 
       const token = await ethers.deployContract(Token, [name, symbol, name, version]);
@@ -33,7 +38,7 @@ describe('ERC20Votes', function () {
 
     describe(`vote with ${mode}`, function () {
       beforeEach(async function () {
-        Object.assign(this, await loadFixture(fixture));
+        Object.assign(this, await fixture());
         this.votes = this.token;
       });
 
@@ -56,7 +61,8 @@ describe('ERC20Votes', function () {
         for (let i = 0; i < 6; i++) {
           await this.token.$_mint(this.holder, 1n);
         }
-        const timepoint = await time.clock[mode]();
+        await sleep(3000);
+        const timepoint = Math.ceil(Date.now() / 1000);
         expect(await this.token.numCheckpoints(this.holder)).to.equal(6n);
         // recent
         expect(await this.token.getPastVotes(this.holder, timepoint - 1n)).to.equal(5n);

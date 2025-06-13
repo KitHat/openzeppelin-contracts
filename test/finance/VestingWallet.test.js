@@ -29,7 +29,7 @@ async function fixture() {
 
 describe('VestingWallet', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   it('rejects zero address for beneficiary', async function () {

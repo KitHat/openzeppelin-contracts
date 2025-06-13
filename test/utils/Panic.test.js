@@ -9,7 +9,7 @@ async function fixture() {
 
 describe('Panic', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   for (const [name, code] of Object.entries({

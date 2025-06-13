@@ -36,7 +36,7 @@ async function fixture() {
 
 describe('AccountERC7579', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
 
     this.signer.signMessage = message =>
       ethers.Wallet.prototype.signMessage

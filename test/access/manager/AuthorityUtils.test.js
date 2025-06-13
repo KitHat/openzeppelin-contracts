@@ -5,7 +5,9 @@ const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { MAX_UINT32, MAX_UINT64 } = require('../../helpers/constants');
 
 async function fixture() {
-  const [user, other] = await ethers.getSigners();
+  const [user] = await ethers.getSigners();
+
+  let other = new ethers.Wallet("0x39539ab1876910bbf3a223d84a29e28f1cb4e2e456503e7e91ed39b2e7223d68", ethers.provider);
 
   const mock = await ethers.deployContract('$AuthorityUtils');
   const notAuthorityMock = await ethers.deployContract('NotAuthorityMock');
@@ -26,7 +28,7 @@ async function fixture() {
 
 describe('AuthorityUtils', function () {
   beforeEach(async function () {
-    Object.assign(this, await loadFixture(fixture));
+    Object.assign(this, await fixture());
   });
 
   describe('canCallWithDelay', function () {
