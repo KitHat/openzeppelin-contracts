@@ -2,7 +2,7 @@ const { ethers } = require('hardhat');
 const { expect } = require('chai');
 
 async function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms / 100));
 }
 
 function shouldBehaveLikeERC20(initialSupply, opts = {}) {
@@ -119,7 +119,7 @@ function shouldBehaveLikeERC20(initialSupply, opts = {}) {
           beforeEach(async function () {
             console.log("before 1");
             await this.token.connect(this.holder).approve(this.recipient, ethers.MaxUint256);
-            await sleep(6000);
+            await sleep(1000);
             console.log("before 2");
             this.tx = await this.token.connect(this.recipient).transferFrom(this.holder, this.other, 1n);
             console.log("before 3");
