@@ -7,10 +7,7 @@ const symbol = 'MTKN';
 const initialSupply = 100n;
 
 async function fixture() {
-  const [holder, recipient] = await ethers.getSigners();
-  let fundedPrivate = "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b";
-  let fundedWallet = new ethers.Wallet(fundedPrivate, ethers.provider);
-  const approved = fundedWallet;
+  const [holder, recipient, approved] = await ethers.getSigners();
 
   const token = await ethers.deployContract('$ERC20Pausable', [name, symbol]);
   await token.$_mint(holder, initialSupply);

@@ -11,11 +11,7 @@ const initialSupply = 100n;
 
 async function fixture() {
   // this.accounts is used by shouldBehaveLikeERC20
-  const accounts = await ethers.getSigners();
-  let fundedPrivate = "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b";
-  let fundedWallet = new ethers.Wallet(fundedPrivate, ethers.provider);
-  accounts[1] = fundedWallet;
-  const [holder, recipient, other] = accounts;
+  const [holder, recipient, other, ...accounts] = await ethers.getSigners();
 
   const token = await ethers.deployContract('$ERC20TemporaryApproval', [name, symbol]);
   await token.$_mint(holder, initialSupply);
@@ -47,35 +43,35 @@ describe('ERC20TemporaryApproval', function () {
       temporaryExpected,
       persistentExpected,
     } of [
-      { description: 'can set temporary allowance', temporaryAllowance: 42n },
-      {
-        description: 'can set temporary allowance on top of persistent allowance',
-        temporaryAllowance: 42n,
-        persistentAllowance: 17n,
-      },
-      { description: 'support allowance overflow', temporaryAllowance: ethers.MaxUint256, persistentAllowance: 17n },
-      { description: 'consuming temporary allowance alone', temporaryAllowance: 42n, amount: 2n },
-      {
-        description: 'fallback to persistent allowance if temporary allowance is not sufficient',
-        temporaryAllowance: 42n,
-        persistentAllowance: 17n,
-        amount: 50n,
-      },
-      {
-        description: 'do not reduce infinite temporary allowance #1',
-        temporaryAllowance: ethers.MaxUint256,
-        amount: 50n,
-        temporaryExpected: ethers.MaxUint256,
-      },
-      {
-        description: 'do not reduce infinite temporary allowance #2',
-        temporaryAllowance: 17n,
-        persistentAllowance: ethers.MaxUint256,
-        amount: 50n,
-        temporaryExpected: ethers.MaxUint256,
-        persistentExpected: ethers.MaxUint256,
-      },
-    ]) {
+        { description: 'can set temporary allowance', temporaryAllowance: 42n },
+        {
+          description: 'can set temporary allowance on top of persistent allowance',
+          temporaryAllowance: 42n,
+          persistentAllowance: 17n,
+        },
+        { description: 'support allowance overflow', temporaryAllowance: ethers.MaxUint256, persistentAllowance: 17n },
+        { description: 'consuming temporary allowance alone', temporaryAllowance: 42n, amount: 2n },
+        {
+          description: 'fallback to persistent allowance if temporary allowance is not sufficient',
+          temporaryAllowance: 42n,
+          persistentAllowance: 17n,
+          amount: 50n,
+        },
+        {
+          description: 'do not reduce infinite temporary allowance #1',
+          temporaryAllowance: ethers.MaxUint256,
+          amount: 50n,
+          temporaryExpected: ethers.MaxUint256,
+        },
+        {
+          description: 'do not reduce infinite temporary allowance #2',
+          temporaryAllowance: 17n,
+          persistentAllowance: ethers.MaxUint256,
+          amount: 50n,
+          temporaryExpected: ethers.MaxUint256,
+          persistentExpected: ethers.MaxUint256,
+        },
+      ]) {
       persistentAllowance ??= 0n;
       temporaryAllowance ??= 0n;
       amount ??= 0n;

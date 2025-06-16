@@ -7,6 +7,7 @@ const { batchInBlock } = require('../../../helpers/txpool');
 const time = require('../../../helpers/time');
 
 const { shouldBehaveLikeVotes } = require('../../../governance/utils/Votes.behavior');
+const { sleep } = require('../ERC20.behavior');
 
 const TOKENS = [
   { Token: '$ERC20Votes', mode: 'blocknumber' },
@@ -22,13 +23,7 @@ describe('ERC20Votes', function () {
   for (const { Token, mode } of TOKENS) {
     const fixture = async () => {
       // accounts is required by shouldBehaveLikeVotes
-      const accounts = await ethers.getSigners();
-      let fundedPrivate = "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b";
-      let fundedWallet = new ethers.Wallet(fundedPrivate, ethers.provider);
-      accounts[1] = fundedWallet;
-      accounts[2] = fundedWallet;
-      accounts[3] = fundedWallet;
-      const [holder, recipient, delegatee, other1, other2] = accounts;
+      const [holder, recipient, delegatee, other1, other2, ...accounts] = await ethers.getSigners();
 
       const token = await ethers.deployContract(Token, [name, symbol, name, version]);
       const domain = await getDomain(token);
@@ -64,10 +59,11 @@ describe('ERC20Votes', function () {
         await sleep(3000);
         const timepoint = Math.ceil(Date.now() / 1000);
         expect(await this.token.numCheckpoints(this.holder)).to.equal(6n);
+        await sleep(3000);
         // recent
-        expect(await this.token.getPastVotes(this.holder, timepoint - 1n)).to.equal(5n);
+        expect(await this.token.getPastVotes(this.holder, timepoint - 1)).to.equal(5);
         // non-recent
-        expect(await this.token.getPastVotes(this.holder, timepoint - 6n)).to.equal(0n);
+        expect(await this.token.getPastVotes(this.holder, timepoint - 6)).to.equal(0);
       });
 
       describe('set delegation', function () {

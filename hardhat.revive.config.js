@@ -55,9 +55,9 @@ const { argv } = require('yargs/yargs')()
       type: 'string',
     },
   });
-require('hardhat-abi-exporter');
-require('hardhat-resolc');
-require('hardhat-revive-node');
+require('@parity/hardhat-polkadot');
+require('@parity/hardhat-polkadot-node');
+require('@parity/hardhat-polkadot-resolc');
 require('@nomicfoundation/hardhat-chai-matchers');
 require('@nomicfoundation/hardhat-ethers');
 require('hardhat-exposed');
@@ -90,7 +90,7 @@ module.exports = {
       polkavm: true,
       allowUnlimitedContractSize: true,
       nodeConfig: {
-        nodeBinaryPath: '/Users/nikitakhateev/substrate-node',
+        nodeBinaryPath: '/Users/nikitakhateev/revive-dev-node',
         rpcPort: 8000,
         dev: true,
       },

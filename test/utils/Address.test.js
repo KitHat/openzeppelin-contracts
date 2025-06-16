@@ -6,8 +6,7 @@ const { PANIC_CODES } = require('@nomicfoundation/hardhat-chai-matchers/panic');
 const coder = ethers.AbiCoder.defaultAbiCoder();
 
 async function fixture() {
-  const [recipient] = await ethers.getSigners();
-  const other = new ethers.Wallet("0x39539ab1876910bbf3a223d84a29e28f1cb4e2e456503e7e91ed39b2e7223d68", ethers.provider);
+  const [recipient, other] = await ethers.getSigners();
 
   const mock = await ethers.deployContract('$Address');
   const target = await ethers.deployContract('CallReceiverMock');

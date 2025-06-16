@@ -9,9 +9,6 @@ const initialBalance = 1000n;
 
 async function fixture() {
   let [owner, burner] = await ethers.getSigners();
-  let fundedPrivate = "0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b";
-  let fundedWallet = new ethers.Wallet(fundedPrivate, ethers.provider);
-  burner = fundedWallet;
 
   const token = await ethers.deployContract('$ERC20Burnable', [name, symbol], owner);
   await token.$_mint(owner, initialBalance);
