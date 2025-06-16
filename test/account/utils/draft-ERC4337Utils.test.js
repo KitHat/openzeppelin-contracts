@@ -176,7 +176,8 @@ describe('ERC4337Utils', function () {
   });
 
   describe('hash', function () {
-    for (const [version, instance] of Object.entries(entrypoint)) {
+    let entrypoint_val = entrypoint ? entrypoint : {};
+    for (const [version, instance] of Object.entries(entrypoint_val)) {
       it(`returns the operation hash for entrypoint ${version}`, async function () {
         const userOp = new UserOperation({ sender: this.sender, nonce: 1 });
         const expected = await userOp.hash(instance);
