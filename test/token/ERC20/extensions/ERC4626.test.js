@@ -11,7 +11,8 @@ const symbol = 'MTKN';
 const decimals = 18n;
 
 async function fixture() {  
-  const [holder, recipient, spender, other, ...accounts] = await ethers.getSigners();
+  const accounts = await ethers.getSigners();
+  const [holder, recipient, spender, other] = accounts;
   return { holder, recipient, spender, other, accounts };
 }
 

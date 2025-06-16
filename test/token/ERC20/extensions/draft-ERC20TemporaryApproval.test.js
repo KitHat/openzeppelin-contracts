@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { max, min } = require('../../../helpers/math.js');
 
-const { shouldBehaveLikeERC20 } = require('../ERC20.behavior.js');
+const { shouldBehaveLikeERC20, sleep } = require('../ERC20.behavior.js');
 
 const name = 'My Token';
 const symbol = 'MTKN';
@@ -11,7 +11,8 @@ const initialSupply = 100n;
 
 async function fixture() {
   // this.accounts is used by shouldBehaveLikeERC20
-  const [holder, recipient, other, ...accounts] = await ethers.getSigners();
+  const accounts = await ethers.getSigners();
+  const [holder, recipient, other] = accounts;
 
   const token = await ethers.deployContract('$ERC20TemporaryApproval', [name, symbol]);
   await token.$_mint(holder, initialSupply);

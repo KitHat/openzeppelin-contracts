@@ -20,7 +20,8 @@ describe('ERC20', function () {
     describe(Token, function () {
       const fixture = async () => {
         // this.accounts is used by shouldBehaveLikeERC20
-        const [holder, recipient, ...accounts] = await ethers.getSigners();
+        const accounts = await ethers.getSigners();
+        const [holder, recipient] = accounts;
 
         const token = await ethers.deployContract(Token, [name, symbol]);
         await token.$_mint(holder, initialSupply);

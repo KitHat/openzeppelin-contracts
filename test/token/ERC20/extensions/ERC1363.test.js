@@ -18,7 +18,8 @@ const data = '0x123456';
 
 async function fixture() {
   // this.accounts is used by shouldBehaveLikeERC20
-  const [holder, other, ...accounts] = await ethers.getSigners();
+  const accounts = await ethers.getSigners()
+  const [holder, other] = accounts;
 
 
   const receiver = await ethers.deployContract('ERC1363ReceiverMock');
