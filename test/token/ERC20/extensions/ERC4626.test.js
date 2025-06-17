@@ -608,16 +608,11 @@ describe('ERC4626', function () {
         });
 
         it('redeem with approval', async function () {
-          let tx = await this.vault.connect(this.other).redeem(parseShare(100n), this.recipient, this.holder);
-          await sleep(3000);
-          await expect(tx)
+          await expect(this.vault.connect(this.other).redeem(parseShare(100n), this.recipient, this.holder))
             .to.be.revertedWithCustomError(this.vault, 'ERC20InsufficientAllowance')
             .withArgs(this.other, 0n, parseShare(100n));
-          await sleep(3000);
 
-          tx = await this.vault.connect(this.spender).redeem(parseShare(100n), this.recipient, this.holder);
-          await sleep(3000);
-          expect(tx).to.not.be
+          await expect(this.vault.connect(this.spender).redeem(parseShare(100n), this.recipient, this.holder)).to.not.be
             .reverted;
         });
       });

@@ -12,7 +12,7 @@ module.exports = function shouldBehaveLikeTransparentUpgradeableProxy() {
 
     const createProxyWithImpersonatedProxyAdmin = async (logic, initData, opts = undefined) => {
       let p = await this.createProxy(logic, initData, opts);
-      const [proxy, tx] = Promise.all([ethers.getContractAt('ITransparentUpgradeableProxy', p), p.deploymentTransaction()]);
+      const [proxy, tx] = await Promise.all([ethers.getContractAt('ITransparentUpgradeableProxy', p), p.deploymentTransaction()]);
 
       const proxyAdmin = await ethers.getContractAt(
         'ProxyAdmin',
